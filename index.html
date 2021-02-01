@@ -1,67 +1,163 @@
 <!DOCTYPE html>
-
 <html>
-  <head>
-    <title>Color Game</title>
-    <link rel="stylesheet" href="./index.css" />
-  </head>
-  <body onload="newGame()">
-    <div id="header">
-      <h2>The Great</h2>
-      <h1 id="header-clue">rgb(xxx,xxx,xxx)</h1>
-      <h2>Guessing Game</h2>
-    </div>
-    <div id="container">
-      <div class="tile" id="1"></div>
-      <div class="tile" id="2"></div>
-    </div>
+    <head>
+        <title>Color Game</title>
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Potta+One&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="./style.css" />
+    </head>
+    <body onload="newGame()">
+        <div class="container">
+            <div class="heading"><h3>The Great Color Guessing Game</h3></div>
 
-    <script>
-      var t1 = document.getElementById("1");
-      var t2 = document.getElementById("2");
-      var x;
-      var correctColor;
+            <div class="rules">
+                <a href="./rules.html" target="_blank"><button class="button">Rules</button></a>
+            </div>
+            
+            <div class="clue"><h2 id="clue">rgb(xxx,xxx,xxx)</h2></div>
+            
+            <div class="score">
+                <h3 id="wish">Best Of Luck</h3>
+                <h3 id="score">Score=0</h3>
+                <h3 id="attempts">Wrong Attempts Remaining=8</h3>
+            </div>
+            
+            <div class="reset"><button onClick="window.location.reload();" class="button">New Game</button></div>
 
-      function getRandomColor() {
-        var letters = "0123456789ABCDEF";
-        var color = "#";
-        for (var i = 0; i < 6; i++) {
-          color += letters[Math.floor(Math.random() * 16)];
-        }
-        return color;
-      }
+            <div class="quit"><button class="button" onclick="Quit()">Quit</button></div>
 
-      function newGame() {
-        t1.style.background = getRandomColor();
-        t2.style.background = getRandomColor();
+            <div class="interface">
+                <div class="container2">
+                    <div class="tile" id="1"></div>
+                    <div class="tile" id="2"></div>
+                    <div class="tile" id="3"></div>
+                    <div class="tile" id="4"></div>
+                    <div class="tile" id="5"></div>
+                    <div class="tile" id="6"></div>
+                </div>
+            </div>
+            
+            <div class="credits"><h3>Made By - Sankalp Swarup</h3></div>
+        </div>
 
-        x = Math.floor(Math.random() * 2 + 1);
 
-        if (x == 1) correctColor = t1.style.background;
-        else correctColor = t2.style.background;
-        /* console.log(x);
-        console.log(correctColor); */
 
-        document.getElementById("header-clue").innerHTML = correctColor;
-      }
 
-      t1.addEventListener("click", function () {
-        if (t1.style.background == correctColor) {
-          t2.style.background = correctColor;
-          document.getElementById("header").style.background = correctColor;
-        } else {
-          t1.style.background = "black";
-        }
-      });
 
-      t2.addEventListener("click", function () {
-        if (t2.style.background == correctColor) {
-          t1.style.background = correctColor;
-          document.getElementById("header").style.background = correctColor;
-        } else {
-          t2.style.background = "black";
-        }
-      });
-    </script>
-  </body>
+
+        <script>
+ 
+            var t=[
+            document.getElementById("1"),
+            document.getElementById("2"),
+            document.getElementById("3"),
+            document.getElementById("4"),
+            document.getElementById("5"),
+            document.getElementById("6")
+            ]
+            var x;
+            var correctColor;
+            var remaining=8;
+            var score=0;
+            var msg;
+            var playing=true;
+            var elementId;
+            var first;
+        
+           
+            
+            function Control()
+            {if(playing){
+         
+              document.getElementById("clue").innerHTML=msg;
+              document.getElementById("score").innerHTML=("Score="+score);
+              document.getElementById("attempts").innerHTML=("Wrong Attempts Remaining="+remaining);
+
+              if(remaining>0) 
+                setTimeout(newGame, 1000);
+              if(remaining<=0)
+                {document.getElementById("attempts").innerHTML=("Game Over!");playing=false; }
+            }}
+
+            function Quit()
+            {
+              document.getElementById("attempts").innerHTML=("Thank You For Playing");
+              playing=false;
+            }
+
+            function getRandomColor() {
+              var letters = "0123456789ABCDEF";
+              var color = "#";
+              for (var i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+              }
+              return color;
+            }
+
+            function newGame() {
+              first=true;
+              for(var x=1;x<=6;x+=1)
+              {
+                  t[x-1].style.background = getRandomColor();
+              }
+            
+              x = Math.floor(Math.random() * 6 + 1);
+      
+              correctColor=t[x-1].style.background;
+              
+      
+              document.getElementById("clue").innerHTML = correctColor;
+            }
+
+
+
+            function Pressed()
+            {if(first&&playing){
+              if (t[elementId].style.background == correctColor) 
+              {
+                t[elementId].style.background="white";
+                msg="CORRECT";
+                score+=1;
+              } 
+              else
+              {
+                t[elementId].style.background="black";
+                msg="WRONG";
+                remaining-=1;
+              }
+              first=false;
+              Control();      
+            }
+            }
+
+
+            t[0].addEventListener("click", function () {
+              elementId=0;
+              Pressed();
+            });
+            t[1].addEventListener("click", function () {
+              elementId=1;
+              Pressed();
+            });
+            t[2].addEventListener("click", function () {
+              elementId=2;
+              Pressed();
+            });
+            t[3].addEventListener("click", function () {
+              elementId=3;
+              Pressed();
+            });
+            t[4].addEventListener("click", function () {
+              elementId=4;
+              Pressed();
+            });
+            t[5].addEventListener("click", function () {
+              elementId=5;
+              Pressed();
+            });
+
+            
+       </script>
+      
+    </body>
 </html>
